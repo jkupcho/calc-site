@@ -1,5 +1,5 @@
-function _getRemainingMonths(month, term) {
-  return (term - (month - 1)) * 12;
+function _getNumberMonthlyPayments(term) {
+  return term * 12;
 }
 
 function _round(num) {
@@ -14,7 +14,7 @@ export const getMonthlyRate = (rate) => {
   return (rate / 12) / 100;
 }
 
-export const getMortgagePayment = (principal, rate, month, term) => {
-  const remainingMonths = _getRemainingMonths(month, term);
-  return _round((rate / (1 - (Math.pow(1 + rate, -1 * remainingMonths)))) * principal);
+export const getMortgagePayment = (principal, rate, term) => {
+  const monthlyPayments = _getNumberMonthlyPayments(term);
+  return _round((rate / (1 - (Math.pow(1 + rate, -1 * monthlyPayments)))) * principal);
 };
