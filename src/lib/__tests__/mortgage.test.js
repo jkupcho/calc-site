@@ -2,7 +2,7 @@ import { getMonthlyRate, getMortgagePayment, getMonthlyInterest } from '../mortg
 
 describe('mortgage calculation', () => {
   const principal = 100000;
-  const rate = getMonthlyRate(3.92);
+  const rate = 3.92;
   const term = 30;
 
   it('should calculate the correct interest rate', () => {

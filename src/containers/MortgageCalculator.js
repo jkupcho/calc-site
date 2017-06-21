@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Label } from '../components/Bulma';
+import { getMortgagePayment } from '../lib/mortgage';
 
 export default class MortgageCalculator extends Component {
 
@@ -33,19 +34,9 @@ export default class MortgageCalculator extends Component {
       <div className="container">
         <div className="columns">
           <div className="column is-half">
-            <div className="field">
-              <Label>Principal</Label>
-              <p className="control">
-                <input type="number" className="input" onChange={(event) => this._updateField('principal')(+event.target.value)} />
-              </p>
-            </div>
-            <LoanTerms onChange={(event) => this._updateField('term')(+event.target.value)} loanTerms={this.loanTerms} />
-            <div className="field">
-              <Label>Interest Rate</Label>
-              <p className="control">
-                <input type="number" className="input" onChange={(event) => this._updateField('rate')(+event.target.value)} />
-              </p>
-            </div>
+            <NumberInput label="Principal" value={this.state.principal} onChange={(event) => this._updateField('principal')(+event.target.value)} />
+            <LoanTerms selectValue={this.state.term} onChange={(event) => this._updateField('term')(+event.target.value)} loanTerms={this.loanTerms} />
+            <NumberInput label="Interest Rate" value={this.state.rate} onChange={(event) => this._updateField('rate')(+event.target.value)} />
           </div>
           <div className="column is-half">
             {
@@ -65,9 +56,24 @@ const FinishForm = () => {
   );
 }
 
-const PaymentInfo = () => {
+const PaymentInfo = ({principal, rate, term}) => {
+  const mortgagePayment = getMortgagePayment(principal, rate, term);
   return (
-    <p>PaymentInfo</p>
+    <div>
+      <h2 className="subtitle">Monthly Payment</h2>
+      <h1 className="title">${mortgagePayment}</h1>
+    </div>
+  );
+}
+
+const NumberInput = ({label, value, onChange}) => {
+  return (
+    <div className="field">
+      <Label>{label}</Label>
+      <p className="control">
+        <input type="number" className="input" onChange={onChange} defaultValue={value} />
+      </p>
+    </div>
   );
 }
 
@@ -78,7 +84,7 @@ const LoanTerms = ({loanTerms, ...rest}) => {
       <div className="field has-addons">
         <div className="control">
           <div className="select">
-            <select {...rest}>
+            <select onChange={rest.onChange} defaultValue={rest.selectValue}>
               <option value="" default>Select...</option>
               {
                 loanTerms.map((loanTerm, index) => <option key={index} value={loanTerm}>{loanTerm}</option>)

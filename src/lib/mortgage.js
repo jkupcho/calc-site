@@ -7,7 +7,7 @@ function _round(num) {
 }
 
 export const getMonthlyInterest = (rate, principal) => {
-  return _round(rate * principal);
+  return _round(getMonthlyRate(rate) * principal);
 }
 
 export const getMonthlyRate = (rate) => {
@@ -16,5 +16,6 @@ export const getMonthlyRate = (rate) => {
 
 export const getMortgagePayment = (principal, rate, term) => {
   const monthlyPayments = _getNumberMonthlyPayments(term);
-  return _round((rate / (1 - (Math.pow(1 + rate, -1 * monthlyPayments)))) * principal);
+  const monthyRate = getMonthlyRate(rate);
+  return _round((monthyRate / (1 - (Math.pow(1 + monthyRate, -1 * monthlyPayments)))) * principal);
 };
